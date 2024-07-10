@@ -5,7 +5,6 @@ tags: [ Architecture, AWS, Java, Spring Boot ]
 featured_image_thumbnail: assets/images/posts/pinokio/pinokio1_thumbnail.webp
 featured_image: assets/images/posts/pinokio/pinokio1.webp
 featured: true
-hidden: true
 ---
 
 In the previous article we outlined what we are going to design and implement and the features our final deliverable will have. 
