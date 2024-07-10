@@ -1,0 +1,59 @@
+# Site setings
+name: "CatnipCoder"
+description: "Catnip coder is a technical blog for software engineers who want to elevate their skills."
+meta_description: "Technical blog, perfect for software engineers."
+logo: "assets/images/catnipcoderlogo.png"
+favicon: "assets/images/favicon.ico"
+baseurl:
+production_url: https://horace.netlify.com/
+disqus: ""
+mailchimp_url: "https://gmail.us21.list-manage.com/subscribe/post?u=f96be454ea966235860117a2d&amp;id=b699e63785&amp;f_id=00659be6f0"
+cover_image: bc_1.jpg
+# Add your GA Tracking Id
+ga_analytics:
+
+# Author
+author:
+  name: "Vasilis Soumakis"
+  image: "meimage.jpeg"
+  greetings: "Hi there!"
+  description: "My name is Vasilis Soumakis. I'm a freelance software engineer and blogger based in Athens, Greece. It’s nice to meet you."
+  bio: "Vasilis is a software engineer, architect and blogger around technical articles and tutorials for the JVM ecosystem."
+
+# Contact form setings
+email: billsoumakis@email.com
+contact_page_description: "Horace theme comes with a contact form built-in. You can use this form with Formspree service and get up to 50 submissions for free. Also, you can easily switch to another service if you want."
+thankyou_page_description: "Your message has been successfully sent. We will contact you very soon!"
+
+# Social links
+github: "VassilisSoum"
+medium: "@billsoumakis"
+linkedin: "bill-soumakis-b206a339"
+
+# Navigation
+navigation:
+  - text: About
+    url: /about
+  - text: Archive
+    url: /tags
+
+# Required Plugins
+plugins_dir:
+  - jekyll-paginate
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Pagination
+paginate: 5
+paginate_path: /page:num/
+
+# Permalinks
+permalink: /:title
+
+# Other
+markdown: kramdown
+
+# Sass
+sass:
+  sass_dir: _sass
+  style: compressed
