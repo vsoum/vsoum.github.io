@@ -4,7 +4,6 @@ title:  "🤥Pinokio URL Shortener Design and Implementation: A Hands-On Solutio
 tags: [ Architecture, AWS, Java, Spring Boot ]
 featured_image_thumbnail: assets/images/posts/pinokio/pinokio1_thumbnail.webp
 featured_image: assets/images/posts/pinokio/pinokio1.webp
-featured: true
 ---
 
 In this series of articles, we will design and implement a complete URL shortener service called Pinokio. 
