@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+        <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>🤥Pinokio URL Shortener Design and Implementation: A Hands-On Solution Architecture (Part 1) | CatnipCoder</title>
+<meta name="generator" content="Jekyll v4.2.2" />
+<meta property="og:title" content="🤥Pinokio URL Shortener Design and Implementation: A Hands-On Solution Architecture (Part 1)" />
+<meta name="author" content="Vasilis Soumakis" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In this series of articles, we will design and implement a complete URL shortener service called Pinokio. We will design the architecture, discuss the decisions made, compare different architectural solutions, and implement the system using the Java programming language and the Spring Boot framework. As part of this series, we will analyze the complexity of each architectural solution and the associated costs." />
+<meta property="og:description" content="In this series of articles, we will design and implement a complete URL shortener service called Pinokio. We will design the architecture, discuss the decisions made, compare different architectural solutions, and implement the system using the Java programming language and the Spring Boot framework. As part of this series, we will analyze the complexity of each architectural solution and the associated costs." />
+<link rel="canonical" href="http://localhost:4000/pinokio-url-shortener-design-and-implementation-part1" />
+<meta property="og:url" content="http://localhost:4000/pinokio-url-shortener-design-and-implementation-part1" />
+<meta property="og:site_name" content="CatnipCoder" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-07-10T00:00:00+03:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="🤥Pinokio URL Shortener Design and Implementation: A Hands-On Solution Architecture (Part 1)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Vasilis Soumakis"},"dateModified":"2024-07-10T00:00:00+03:00","datePublished":"2024-07-10T00:00:00+03:00","description":"In this series of articles, we will design and implement a complete URL shortener service called Pinokio. We will design the architecture, discuss the decisions made, compare different architectural solutions, and implement the system using the Java programming language and the Spring Boot framework. As part of this series, we will analyze the complexity of each architectural solution and the associated costs.","headline":"🤥Pinokio URL Shortener Design and Implementation: A Hands-On Solution Architecture (Part 1)","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/pinokio-url-shortener-design-and-implementation-part1"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/images/catnipcoderlogo.png"},"name":"Vasilis Soumakis"},"url":"http://localhost:4000/pinokio-url-shortener-design-and-implementation-part1"}</script>
+<!-- End Jekyll SEO tag -->
+
+    
+
+    <!-- Site Favicon -->
+    <link rel="shortcut icon" href="http://localhost:4000/assets/images/favicon.ico" type="image/png" />
+
+    <!-- Font Embed Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <!-- CSS Styles -->
+    <link href="/assets/css/style.css" rel="stylesheet">
+
+</head>
+
+
+
+<body class="layout-post">
+    <div id="page" class="site">
+
+        
+        <header id="masthead" class="site-header outer">
+    <div class="site-header-inside">
+        <div class="site-branding">
+            
+                <p class="site-logo"><a href="/" rel="home"><img src="/assets/images/catnipcoderlogo.png" alt="CatnipCoder" /></a></p>
+                <h1 class="site-title screen-reader-text"><a href="" rel="home"></a></h1>
+            
+        </div><!-- .site-branding -->
+        <nav id="main-navigation" class="site-navigation" aria-label="Primary Navigation">
+            <ul class="menu">
+            
+                <li class="menu-item"><a href="/about">About</a></li>
+            
+                <li class="menu-item"><a href="/tags">Archive</a></li>
+            
+            </ul>
+            <button id="sidebar-show" class="sidebar-toggle btn-icon"><span class="screen-reader-text">Open Sidebar</span><span class="icon-more" aria-hidden="true"></span></button>
+        </nav><!-- .site-navigation -->
+    </div><!-- .site-header-inside -->
+</header><!-- .site-header -->
+        
+
+        <div id="content" class="site-content fadeInDown delay_075s">
+    <main id="main" class="site-main outer">
+        <article class="post-full inner">
+            <header class="post-header">
+                <div class="post-meta">
+                    <time class="post-date" datetime=" 2024-07-10">July 10,
+                        2024</time>
+                </div><!-- .post-meta -->
+                <h1 class="posttitle">🤥Pinokio URL Shortener Design and Implementation: A Hands-On Solution Architecture (Part 1)</h1>
+            </header><!-- .post-header -->
+            
+            <div class="post-thumbnail"><img class="featured-image img-fluid"
+                    src="assets/images/posts/pinokio/pinokio1.webp" alt="🤥Pinokio URL Shortener Design and Implementation: A Hands-On Solution Architecture (Part 1)"></div>
+            
+            <div class="post-content">
+                <p>In this series of articles, we will design and implement a complete URL shortener service called Pinokio. 
+We will design the architecture, discuss the decisions made, compare different architectural solutions, 
+and implement the system using the Java programming language and the Spring Boot framework. 
+As part of this series, we will analyze the complexity of each architectural solution and the associated costs.</p>
+
+<!--more-->
+
+<blockquote>
+  <p>“If you can’t build the thing you’re designing, you shouldn’t be designing it.” <cite>- Simon Brown -</cite></p>
+</blockquote>
+
+<p>Our final system will consist of:</p>
+
+<ul>
+  <li>A modular monolithic platform. We will explain the pros and cons of this domain model and why it suits our requirements best.</li>
+  <li>CI/CD via GitHub Actions for continuous deployment.</li>
+  <li>AWS EC2 instances in Docker Swarm mode with an Auto Scaling group for scaling worker nodes.</li>
+  <li>AWS DynamoDB as our persistent storage.</li>
+  <li>AWS CloudFront for caching the redirection of short URLs to the original URLs at edge locations closer to the user.</li>
+  <li>AWS API Gateway with rate limiting support and SSL termination.</li>
+  <li>Environment automation using AWS CloudFormation.</li>
+  <li>Automated distributed performance testing using Gatling and EC2.</li>
+</ul>
+
+<p>Our final system will be highly available, fault-tolerant, and scalable.</p>
+
+<p>In each part, the relevant AWS stack will be provided to you to quickly set up the infrastructure.</p>
+
+<p><strong>Please note that you might incur some charges if you choose to execute the AWS stack yourself.</strong> 
+Alternatively, you can follow along to learn and potentially take advantage of the AWS Free Tier by deploying fewer resources.</p>
+
+<h2 id="acceptance-criteria">Acceptance Criteria</h2>
+
+<ul>
+  <li>URL Shortening:
+    <ol>
+      <li>The system should shorten a long URL to a shorter one.</li>
+      <li>The shortened URL should be 8 characters long.</li>
+      <li>If the long URL is less than or equal to 8 characters, no transformation should be applied.</li>
+    </ol>
+  </li>
+  <li>Handling Special Characters:
+    <ol>
+      <li>The system should detect and appropriately handle URL encodings.</li>
+      <li>The system should handle non-English characters.</li>
+    </ol>
+  </li>
+  <li>Redirection:
+    <ol>
+      <li>When a short URL is invoked via a GET request, a 301 redirect should be returned, redirecting to the long URL.</li>
+      <li>The system should not track statistics for redirections to maintain simplicity in the business logic.</li>
+    </ol>
+  </li>
+  <li>Expiry and Deletion:
+    <ol>
+      <li>By default, the short URL should expire after 3 months.</li>
+      <li>Users should have the ability to delete a short URL manually before the expiry date.</li>
+    </ol>
+  </li>
+  <li>The system should be able to handle 20 million URLs generated per day.</li>
+  <li>Infrastructure:
+    <ol>
+      <li>Use AWS services such as EC2, DynamoDB, API Gateway, ALB, and CloudFront for scaling and load distribution.</li>
+      <li>Docker Swarm will be used to manage containers across EC2 instances.</li>
+    </ol>
+  </li>
+  <li>High availability setup will include at least 3 manager nodes for Docker Swarm and multiple worker nodes.</li>
+  <li>Security: API Gateway will handle SSL termination.</li>
+  <li>Short URLs will be unguessable to prevent enumeration attacks.</li>
+  <li>Caching: Use CloudFront to cache GET requests and reduce the load on backend services.</li>
+</ul>
+
+<h2 id="what-we-will-learn-from-this-series">What We Will Learn from This Series</h2>
+
+<p>We will learn how to design an efficient, highly available, and scalable system using best practices around system design and cloud infrastructure. We will explore various AWS services, understand their pros and cons, and learn how to leverage them to build a system of this scale.</p>
+
+<p>Stay tuned for future articles.</p>
+
+
+            </div>
+            <footer class="post-footer">
+                
+                <p class="post-tags">
+                    <a href="/tags/index.html#Architecture"
+                        rel="tag">Architecture</a><a href="/tags/index.html#AWS"
+                        rel="tag">AWS</a><a href="/tags/index.html#Java"
+                        rel="tag">Java</a><a href="/tags/index.html#Spring+Boot"
+                        rel="tag">Spring Boot</a>
+                </p>
+                
+                <div class="post-share">
+                    <span class="post-share-title">Share:</span>
+                    <a target="_blank"
+                        href="https://twitter.com/share?text=%F0%9F%A4%A5Pinokio+URL+Shortener+Design+and+Implementation%3A+A+Hands-On+Solution+Architecture+%28Part+1%29&amp;url=http://catnipcoder.com/pinokio-url-shortener-design-and-implementation-part1">Twitter</a>
+                    <a target="_blank"
+                        href="https://www.facebook.com/sharer/sharer.php?u=http://catnipcoder.com/pinokio-url-shortener-design-and-implementation-part1">Facebook</a>
+                </div><!-- .share-post -->
+            </footer>
+            <div class="author-box">
+                <div class="author-avatar"><img src="/assets/images/meimage.jpeg"
+                        alt="Vasilis Soumakis's Picture" class="avatar"></div>
+                <div class="author-details">
+                    <h2 class="author-title">About Vasilis Soumakis</h2>
+                    <p class="author-description">Vasilis is a software engineer, architect and blogger around technical articles and tutorials for the JVM ecosystem.</p>
+                </div>
+            </div>
+            
+<section id="comments-area" class="comments-area">
+    <h2 class="comments-title">Comments</h2>
+    <div class="comments-inside">
+        <div id="disqus_thread"></div>
+    </div><!-- .comments-inside -->
+    <div id="comments-overlay" class="comments-overlay">
+        <a href="#" id="comments-show" class="comments-show">Show comments</a>
+    </div><!-- .comments-overlay -->
+    <script type="text/javascript">
+        var disqus_shortname = '';
+        var disqus_developer = 0;
+        (function () {
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = window.location.protocol + '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by
+            Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+
+        </article>
+        
+        <section class="newsletter-box inner-wide">
+    <div class="inner">
+        <h2 class="newsletter-box-title">Subscribe to CatnipCoder newsletter</h2>
+        <p>Get the latest and greatest from CatnipCoder delivered straight to your inbox every week.</p>
+        <!-- Begin MailChimp Signup Form -->
+        <div id="mc_embed_signup">
+            <form action="https://gmail.us21.list-manage.com/subscribe/post?u=f96be454ea966235860117a2d&amp;id=b699e63785&amp;f_id=00659be6f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate gh-subscribe-form" target="_blank" novalidate>
+                <label for="mce-EMAIL" class="screen-reader-text">Email Address</label>
+                <input type="email" value="" name="EMAIL" class="required email subscribe-email" id="mce-EMAIL" placeholder="Your email address">
+                <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+            </form>
+        </div>
+        <!--End mc_embed_signup-->
+    </div><!-- .inner -->
+</section><!-- .widget -->
+        
+        <section class="read-next inner">
+            <h2 class="read-next-title">Read Next</h2>
+            
+            
+            <article class="post">
+                <header class="post-header">
+                    <div class="post-meta">
+                        <time class="published" datetime="July 11, 2024">July 11, 2024</time>
+                    </div>
+                    <h3 class="post-title"><a href="/pinokio-url-shortener-design-and-implementation-part2">🤥Pinokio URL Shortener Design and Implementation: A Hands-On Solution Architecture (Part 2)</a></h3>
+                    <p class="post-tags">
+                        
+                        <a href="/tags/index.html#Architecture"
+                        rel="tag">Architecture</a><a href="/tags/index.html#AWS"
+                        rel="tag">AWS</a><a href="/tags/index.html#Java"
+                        rel="tag">Java</a><a href="/tags/index.html#Spring+Boot"
+                        rel="tag">Spring Boot</a>
+                        
+                    </p>
+                </header>
+                
+                <a href="/pinokio-url-shortener-design-and-implementation-part2" class="post-thumbnail">
+                    <img src="assets/images/posts/pinokio/pinokio1_thumbnail.webp" alt="🤥Pinokio URL Shortener Design and Implementation: A Hands-On Solution Architecture (Part 2)" />
+                </a>
+                
+            </article>
+            
+        </section><!-- .read-next -->
+    </main><!-- .site-main -->
+</div><!-- .site-content -->
+
+        
+
+        <footer id="colophon" class="site-footer outer">
+            <div class="site-footer-inside">
+                <p class="social-links">
+    
+    
+    
+    <a href="https://github.com/VassilisSoum" class="btn btn-icon btn-secondary" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub icon</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        <span class="screen-reader-text">GitHub</span>
+    </a>
+    
+    
+    
+    
+    <a href="https://medium.com/@billsoumakis" class="btn btn-icon btn-secondary" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Medium icon</title><path d="M0 0v24h24V0H0zm19.938 5.686L18.651 6.92a.376.376 0 00-.143.362v9.067a.376.376 0 00.143.361l1.257 1.234v.271h-6.322v-.27l1.302-1.265c.128-.128.128-.165.128-.36V8.99l-3.62 9.195h-.49L6.69 8.99v6.163a.85.85 0 00.233.707l1.694 2.054v.271H3.815v-.27L5.51 15.86a.82.82 0 00.218-.707V8.027a.624.624 0 00-.203-.527L4.019 5.686v-.27h4.674l3.613 7.923 3.176-7.924h4.456v.271z"/></svg>
+        <span class="screen-reader-text">medium</span>
+    </a>
+    
+    
+    
+    
+    <a href="https://www.linkedin.com/in/bill-soumakis-b206a339" class="btn btn-icon btn-secondary" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>LinkedIn icon</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        <span class="screen-reader-text">Linkedin</span>
+    </a>
+    
+    
+</p>
+                <p class="site-info">
+                    <a href="#">CatnipCoder</a> &copy; 2024 . Horace theme by
+                    <a target="_blank" href="https://justgoodthemes.com/">JustGoodThemes</a>. <br />
+                    Powered by <a target="_blank" href="https://jekyllrb.com/">Jekyll</a>.
+                </p>
+                <p class="back-to-top">
+                    <a id="top-button" class="top-button" href="#page">
+                        <span class="icon-arrow-up" aria-hidden="true"></span>
+                        <span class="screen-reader-text">Back to top</span>
+                    </a>
+                </p>
+            </div><!-- .site-footer-inside -->
+        </footer><!-- .site-footer -->
+    </div><!-- .site -->
+    <div id="site-overlay" class="site-overlay"></div>
+    <aside id="sidebar" class="sidebar">
+	<div class="sidebar-scrollable">
+		<div class="sidebar-inside">
+			<button id="sidebar-hide" class="sidebar-toggle btn-icon"><span class="screen-reader-text">Close Sidebar</span><span
+				    aria-hidden="true" class="icon-close"></span></button>
+			<nav id="sidebar-navigation" class="widget site-navigation">
+				<h2 class="widget-title">Explore Site</h2>
+				<ul class="menu">
+					
+						<li class="menu-item"><a href="/about">About</a></li>
+					
+						<li class="menu-item"><a href="/tags">Archive</a></li>
+					
+				</ul>
+			</nav>
+			
+<section class="widget widget-text">
+    <h2 class="widget-title">About CatnipCoder</h2>
+    <p>Catnip coder is a technical blog for software engineers who want to elevate their skills.</p>
+</section>
+
+
+<section class="widget widget-recent-posts">
+    <h2 class="widget-title">Recent Articles</h2>
+    <ul>
+        
+        <li>
+            <div class="post-header">
+                <div class="post-meta">
+                    <time class="published" datetime="??">July 11, 2024</time>
+                </div>
+                <div class="post-title">
+                    <a href="http://localhost:4000/pinokio-url-shortener-design-and-implementation-part2">🤥Pinokio URL Shortener Design and Implementation: A Hands-On Solution Architecture (Part 2)</a>
+                </div>
+            </div>
+            
+            <a class="post-thumbnail" href="/pinokio-url-shortener-design-and-implementation-part2">
+                <img src="http://localhost:4000/assets/images/posts/pinokio/pinokio1_thumbnail.webp"
+                    alt="🤥Pinokio URL Shortener Design and Implementation: A Hands-On Solution Architecture (Part 2)">
+            </a>
+            
+        </li>
+        
+        <li>
+            <div class="post-header">
+                <div class="post-meta">
+                    <time class="published" datetime="??">July 10, 2024</time>
+                </div>
+                <div class="post-title">
+                    <a href="http://localhost:4000/pinokio-url-shortener-design-and-implementation-part1">🤥Pinokio URL Shortener Design and Implementation: A Hands-On Solution Architecture (Part 1)</a>
+                </div>
+            </div>
+            
+            <a class="post-thumbnail" href="/pinokio-url-shortener-design-and-implementation-part1">
+                <img src="http://localhost:4000/assets/images/posts/pinokio/pinokio1_thumbnail.webp"
+                    alt="🤥Pinokio URL Shortener Design and Implementation: A Hands-On Solution Architecture (Part 1)">
+            </a>
+            
+        </li>
+        
+    </ul>
+</section>
+
+<!-- Create a sorted array of tags -->
+ 
+<section class="widget widget-tagcloud">
+    <h2 class="widget-title">Tags</h2>
+    <div class="tagcloud">
+        <a href="/tags/#AWS">AWS</a><a href="/tags/#Architecture">Architecture</a><a href="/tags/#Java">Java</a><a href="/tags/#Spring+Boot">Spring Boot</a>
+    </div>
+</section>
+
+
+<section class="widget widget-newsletter">
+    <div class="inner">
+        <h2 class="widget-title">Subscribe to CatnipCoder</h2>
+        <p>Get the latest and greatest from CatnipCoder delivered straight to your inbox every week.</p>
+        <!-- Begin MailChimp Signup Form -->
+        <div id="mc_embed_signup">
+            <form action="https://gmail.us21.list-manage.com/subscribe/post?u=f96be454ea966235860117a2d&amp;id=b699e63785&amp;f_id=00659be6f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form"
+                class="validate gh-subscribe-form" target="_blank" novalidate>
+                <label for="mce-EMAIL" class="screen-reader-text">Email Address</label>
+                <input type="email" value="" name="EMAIL" class="required email subscribe-email" id="mce-EMAIL"
+                    placeholder="Your email address">
+                <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+            </form>
+        </div>
+    </div>
+</section>
+
+		</div><!-- .sidebar-inside -->
+	</div><!-- .sidebar-scrollable -->
+</aside><!-- .sidebar -->
+    
+    <!-- Javascript Assets -->
+    <script src="/assets/js/jquery-3.6.0.min.js"></script>
+    <script src="/assets/js/plugins.js"></script>
+    <script src="/assets/js/custom.js"></script>
+
+</body>
+
+</html>

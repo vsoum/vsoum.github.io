@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CatnipCoder</title>
+    <description>Catnip coder is a technical blog for software engineers who want to elevate their skills.</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Thu, 11 Jul 2024 01:54:39 +0300</pubDate>
+    <lastBuildDate>Thu, 11 Jul 2024 01:54:39 +0300</lastBuildDate>
+    <generator>Jekyll v4.2.2</generator>
+    
+      <item>
+        <title>🤥Pinokio URL Shortener Design and Implementation: A Hands-On Solution Architecture (Part 2)</title>
+        <description>&lt;p&gt;In the previous article we outlined what we are going to design and implement and the features our final deliverable will have. 
+In this article we are going to examine the proposed architecture utilizing AWS and Docker Swarm. 
+We will explore the reasons we chose this architecture, the pros and cons and any alternatives we could have chosen instead. 
+As always in software architecture and in software engineering there is no right or wrong answer.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2 id=&quot;architecture-overview&quot;&gt;Architecture Overview&lt;/h2&gt;
+
+&lt;p&gt;Here’s a high-level overview of the architecture:&lt;/p&gt;
+
+&lt;h3 id=&quot;key-components&quot;&gt;Key Components:&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Users: Initiate HTTP requests to shorten or resolve URLs.&lt;/li&gt;
+  &lt;li&gt;Route 53: AWS DNS service that resolves domain names and directs traffic.&lt;/li&gt;
+  &lt;li&gt;CloudFront: AWS CDN that caches shortened urls and their mapping to the original urls.&lt;/li&gt;
+  &lt;li&gt;API Gateway: Handles SSL termination and routes requests to the backend.&lt;/li&gt;
+  &lt;li&gt;Elastic Load Balancer (ELB): Balances incoming traffic across Docker Swarm worker nodes.&lt;/li&gt;
+  &lt;li&gt;Docker Swarm Cluster: Processes requests and runs the backend services.&lt;/li&gt;
+  &lt;li&gt;DynamoDB: Stores persistent URL mappings.&lt;/li&gt;
+  &lt;li&gt;GitHub and GitHub Actions: Manage the CI/CD pipeline for deployment.&lt;/li&gt;
+  &lt;li&gt;CloudWatch: Monitors metrics and manages the auto-scaling group.&lt;/li&gt;
+  &lt;li&gt;CloudFormation: Manages infrastructure as code for deployment and configuration.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;detailed-architecture&quot;&gt;Detailed Architecture&lt;/h3&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;End Users:&lt;/p&gt;
+
+    &lt;p&gt;End users are initiating requests to shorten URLs or access already shortened URLs.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Route 53
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Role&lt;/strong&gt;: DNS resolution&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;What it does&lt;/strong&gt;: Translates api.pinokio.com to the CloudFront distribution.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Why&lt;/strong&gt;: Route 53 ensures reliable and scalable DNS management, providing low latency by routing end-users to the nearest CloudFront edge location.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;CloudFront
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Role&lt;/strong&gt;: Content Delivery Network (CDN)&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;What it does&lt;/strong&gt;: Caches shortened urls and forwards requests to API Gateway for creation and deletion and for cache misses.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Why&lt;/strong&gt;: CloudFront reduces latency and improves response times by caching frequently accessed content and handling requests at edge locations.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;API Gateway
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Role&lt;/strong&gt;: Request Handling, SSL Termination and Rate limiting.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;What it does&lt;/strong&gt;: Manages and routes HTTP requests, terminates SSL connections, and forwards requests to the ELB. It also manages the rate limiting.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Why&lt;/strong&gt;: API Gateway provides a secure entry point, handling different HTTP methods (GET, POST, DELETE) and ensuring SSL encryption for data in transit.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Elastic Load Balancer (ELB)
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Role&lt;/strong&gt;: Load Balancing&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;What it does&lt;/strong&gt;: Distributes incoming traffic evenly across the Docker Swarm worker nodes.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Why&lt;/strong&gt;: ELB ensures high availability and fault tolerance by routing requests only to healthy instances.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Docker Swarm Cluster
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Role&lt;/strong&gt;: Backend Processing&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;What it does&lt;/strong&gt;: Hosts and manages the backend services for actual shortening and resolving of URLs.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Why&lt;/strong&gt;: Docker Swarm provides container orchestration, allowing scalable and reliable service deployment and management.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;DynamoDB
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Role&lt;/strong&gt;: Persistent Storage&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;What it does&lt;/strong&gt;: Stores the long-term URL mappings and metadata.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Why&lt;/strong&gt;: DynamoDB provides scalable and reliable NoSQL storage.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;GitHub and GitHub Actions
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Role&lt;/strong&gt;: CI/CD Pipeline&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;What it does&lt;/strong&gt;: Manages the source code and automates the deployment process using GitHub Actions.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Why&lt;/strong&gt;: Automates the CI/CD pipeline.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;CloudWatch
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Role&lt;/strong&gt;: Monitoring and Auto-Scaling&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;What it does&lt;/strong&gt;: Monitors metrics for API Gateway, ELB, and Docker Swarm, managing auto-scaling actions based on defined thresholds.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Why&lt;/strong&gt;: CloudWatch provides monitoring and alerting and enables dynamic scaling of resources.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;CloudFormation
+    &lt;ul&gt;
+      &lt;li&gt;&lt;strong&gt;Role&lt;/strong&gt;: Infrastructure as Code (IaC)&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;What it does&lt;/strong&gt;: Manages the deployment and configuration of all AWS resources.&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Why&lt;/strong&gt;: CloudFormation automates the setup and management of the infrastructure.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;architectural-diagram&quot;&gt;Architectural diagram&lt;/h3&gt;
+
+&lt;p&gt;The diagram was built using diagram as code with &lt;a href=&quot;https://diagrams.mingrammer.com/&quot;&gt;Mingrammer&lt;/a&gt;.&lt;/p&gt;
+
+&lt;figure&gt;
+    &lt;img src=&quot;/assets/images/posts/pinokio/pinokio-architecture-diagram.png#wide&quot; alt=&quot;Architecture diagram&quot; /&gt;
+    
+&lt;/figure&gt;
+
+&lt;h3 id=&quot;why-this-architecture&quot;&gt;Why This Architecture?&lt;/h3&gt;
+
+&lt;p&gt;This architecture was chosen because of:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Scalability: Using Docker Swarm and Auto Scaling we can ensure the dynamic scaling of containers across our nodes and also the dynamic increase and decrease of system nodes based on various load factors.&lt;/li&gt;
+  &lt;li&gt;Performance: CloudFront provides edge caching for GET/HEAD requests.&lt;/li&gt;
+  &lt;li&gt;Reliability: ELB distributes load across worker nodes, and DynamoDB provides reliable, persistent storage with very low latency.&lt;/li&gt;
+  &lt;li&gt;Security: API Gateway handles SSL termination and rate limiting which are offloaded from our business logic.&lt;/li&gt;
+  &lt;li&gt;Monitoring: CloudWatch provides monitoring and scaling management, while CloudFormation manages infrastructure deployment and updates as code.&lt;/li&gt;
+  &lt;li&gt;Automation: GitHub Actions automates the CI/CD process.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;alternative-approaches&quot;&gt;Alternative approaches&lt;/h3&gt;
+
+&lt;p&gt;While the current architecture utilizes a lot of industry proven AWS services, there are some alternative approaches to follow:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Kubernetes instead of Docker Swarm:
+    &lt;ul&gt;
+      &lt;li&gt;Pros: More active community and enables to have more advanced setups.&lt;/li&gt;
+      &lt;li&gt;Cons: High complexity and requisite of expertise.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Fargate or ECS:
+    &lt;ul&gt;
+      &lt;li&gt;Pros: No need to manage EC2 instances and the scaling is done automatically.&lt;/li&gt;
+      &lt;li&gt;Cons: No access to the underlying resources, 3x or 4x more costs in infrastructure.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;AWS Lambda:
+    &lt;ul&gt;
+      &lt;li&gt;Pros: Simplify scaling and infrastructure management.&lt;/li&gt;
+      &lt;li&gt;Cons: Cold start latency can affect performance, more costly in the long run.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;In this article we explored the proposed architecture, the pros and cons of our choices and the alternative approaches. 
+In the next article we will start creating the backend application step by step using Java 21 and Spring Boot framework.&lt;/p&gt;
+
+&lt;p&gt;Stay tuned!&lt;/p&gt;
+</description>
+        <pubDate>Thu, 11 Jul 2024 00:00:00 +0300</pubDate>
+        <link>http://localhost:4000/pinokio-url-shortener-design-and-implementation-part2</link>
+        <guid isPermaLink="true">http://localhost:4000/pinokio-url-shortener-design-and-implementation-part2</guid>
+        
+        <category>Architecture</category>
+        
+        <category>AWS</category>
+        
+        <category>Java</category>
+        
+        <category>Spring Boot</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>🤥Pinokio URL Shortener Design and Implementation: A Hands-On Solution Architecture (Part 1)</title>
+        <description>&lt;p&gt;In this series of articles, we will design and implement a complete URL shortener service called Pinokio. 
+We will design the architecture, discuss the decisions made, compare different architectural solutions, 
+and implement the system using the Java programming language and the Spring Boot framework. 
+As part of this series, we will analyze the complexity of each architectural solution and the associated costs.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“If you can’t build the thing you’re designing, you shouldn’t be designing it.” &lt;cite&gt;- Simon Brown -&lt;/cite&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Our final system will consist of:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A modular monolithic platform. We will explain the pros and cons of this domain model and why it suits our requirements best.&lt;/li&gt;
+  &lt;li&gt;CI/CD via GitHub Actions for continuous deployment.&lt;/li&gt;
+  &lt;li&gt;AWS EC2 instances in Docker Swarm mode with an Auto Scaling group for scaling worker nodes.&lt;/li&gt;
+  &lt;li&gt;AWS DynamoDB as our persistent storage.&lt;/li&gt;
+  &lt;li&gt;AWS CloudFront for caching the redirection of short URLs to the original URLs at edge locations closer to the user.&lt;/li&gt;
+  &lt;li&gt;AWS API Gateway with rate limiting support and SSL termination.&lt;/li&gt;
+  &lt;li&gt;Environment automation using AWS CloudFormation.&lt;/li&gt;
+  &lt;li&gt;Automated distributed performance testing using Gatling and EC2.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Our final system will be highly available, fault-tolerant, and scalable.&lt;/p&gt;
+
+&lt;p&gt;In each part, the relevant AWS stack will be provided to you to quickly set up the infrastructure.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Please note that you might incur some charges if you choose to execute the AWS stack yourself.&lt;/strong&gt; 
+Alternatively, you can follow along to learn and potentially take advantage of the AWS Free Tier by deploying fewer resources.&lt;/p&gt;
+
+&lt;h2 id=&quot;acceptance-criteria&quot;&gt;Acceptance Criteria&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;URL Shortening:
+    &lt;ol&gt;
+      &lt;li&gt;The system should shorten a long URL to a shorter one.&lt;/li&gt;
+      &lt;li&gt;The shortened URL should be 8 characters long.&lt;/li&gt;
+      &lt;li&gt;If the long URL is less than or equal to 8 characters, no transformation should be applied.&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Handling Special Characters:
+    &lt;ol&gt;
+      &lt;li&gt;The system should detect and appropriately handle URL encodings.&lt;/li&gt;
+      &lt;li&gt;The system should handle non-English characters.&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Redirection:
+    &lt;ol&gt;
+      &lt;li&gt;When a short URL is invoked via a GET request, a 301 redirect should be returned, redirecting to the long URL.&lt;/li&gt;
+      &lt;li&gt;The system should not track statistics for redirections to maintain simplicity in the business logic.&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Expiry and Deletion:
+    &lt;ol&gt;
+      &lt;li&gt;By default, the short URL should expire after 3 months.&lt;/li&gt;
+      &lt;li&gt;Users should have the ability to delete a short URL manually before the expiry date.&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;The system should be able to handle 20 million URLs generated per day.&lt;/li&gt;
+  &lt;li&gt;Infrastructure:
+    &lt;ol&gt;
+      &lt;li&gt;Use AWS services such as EC2, DynamoDB, API Gateway, ALB, and CloudFront for scaling and load distribution.&lt;/li&gt;
+      &lt;li&gt;Docker Swarm will be used to manage containers across EC2 instances.&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;High availability setup will include at least 3 manager nodes for Docker Swarm and multiple worker nodes.&lt;/li&gt;
+  &lt;li&gt;Security: API Gateway will handle SSL termination.&lt;/li&gt;
+  &lt;li&gt;Short URLs will be unguessable to prevent enumeration attacks.&lt;/li&gt;
+  &lt;li&gt;Caching: Use CloudFront to cache GET requests and reduce the load on backend services.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;what-we-will-learn-from-this-series&quot;&gt;What We Will Learn from This Series&lt;/h2&gt;
+
+&lt;p&gt;We will learn how to design an efficient, highly available, and scalable system using best practices around system design and cloud infrastructure. We will explore various AWS services, understand their pros and cons, and learn how to leverage them to build a system of this scale.&lt;/p&gt;
+
+&lt;p&gt;Stay tuned for future articles.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 10 Jul 2024 00:00:00 +0300</pubDate>
+        <link>http://localhost:4000/pinokio-url-shortener-design-and-implementation-part1</link>
+        <guid isPermaLink="true">http://localhost:4000/pinokio-url-shortener-design-and-implementation-part1</guid>
+        
+        <category>Architecture</category>
+        
+        <category>AWS</category>
+        
+        <category>Java</category>
+        
+        <category>Spring Boot</category>
+        
+        
+      </item>
+    
+  </channel>
+</rss>
