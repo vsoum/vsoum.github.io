@@ -18,7 +18,7 @@ author:
   image: "meimage.jpeg"
   greetings: "Hi there!"
   description: "My name is Vasilis Soumakis. I'm a freelance software engineer and blogger based in Athens, Greece. It’s nice to meet you."
-  bio: "Vasilis is a software engineer, architect and blogger around technical articles and tutorials for the JVM ecosystem."
+  bio: "Vasilis is a software engineer and blogger around technical articles and tutorials for the JVM ecosystem."
 
 # Contact form setings
 email: billsoumakis@email.com
