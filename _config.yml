@@ -5,7 +5,7 @@ meta_description: "Technical blog, perfect for software engineers."
 logo: "assets/images/catnipcoderlogo.png"
 favicon: "assets/images/favicon.ico"
 baseurl:
-production_url: http://catnipcoder.com/
+production_url: https://www.catnipcoder.com/
 disqus: ""
 mailchimp_url: "https://gmail.us21.list-manage.com/subscribe/post?u=f96be454ea966235860117a2d&amp;id=b699e63785&amp;f_id=00659be6f0"
 cover_image: bc_1.jpg
