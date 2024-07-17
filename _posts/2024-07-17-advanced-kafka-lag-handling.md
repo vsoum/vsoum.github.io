@@ -352,3 +352,6 @@ a topic and determine if a kafka consumer is stuck in real time.
 
 In this article, we have demonstrated how to detect kafka consumer lag accurately across any of the partitions
 of a topic in real time.
+
+## Sources used
+1. [Intelligent, automatic restarts for unhealthy Kafka consumers](https://blog.cloudflare.com/intelligent-automatic-restarts-for-unhealthy-kafka-consumers)

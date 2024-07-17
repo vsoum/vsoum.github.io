@@ -108,6 +108,3 @@ In this article we explored the proposed architecture, the pros and cons of our 
 In the next article we will start creating the backend application step by step using Java 21 and Spring Boot framework.
 
 Stay tuned!
-
-## Sources used
-1. [Intelligent, automatic restarts for unhealthy Kafka consumers](https://blog.cloudflare.com/intelligent-automatic-restarts-for-unhealthy-kafka-consumers)
