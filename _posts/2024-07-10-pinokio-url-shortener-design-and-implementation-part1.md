@@ -39,12 +39,10 @@ Alternatively, you can follow along to learn and potentially take advantage of t
   1. The system should shorten a long URL to a shorter one. 
   2. The shortened URL should be 8 characters long. 
   3. If the long URL is less than or equal to 8 characters, no transformation should be applied.
-* Handling Special Characters:
-  1. The system should detect and appropriately handle URL encodings.
-  2. The system should handle non-English characters.
+  4. For the same long URL, the system will be generating different short URLs to enable in the future the ability to track statistics for each short URL.
 * Redirection:
   1. When a short URL is invoked via a GET request, a 301 redirect should be returned, redirecting to the long URL.
-  2. The system should not track statistics for redirections to maintain simplicity in the business logic.
+  2. The system should not track statistics for redirections to maintain simplicity in the business logic in the first version.
 * Expiry and Deletion:
   1. By default, the short URL should expire after 3 months.
   2. Users should have the ability to delete a short URL manually before the expiry date. 
