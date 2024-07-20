@@ -4,7 +4,6 @@ title: "Detecting kafka consumer lag: Programmatic guide"
 tags: [ Kafka, Java, Spring Boot ]
 featured_image_thumbnail: assets/images/posts/misc/kafka-advanced_thumbnail.jpeg
 featured_image: assets/images/posts/misc/kafka-advanced.jpeg
-featured: true
 ---
 
 In this article we are going to demonstrate how to detect kafka consumer lag accurately across any of the partitions of
