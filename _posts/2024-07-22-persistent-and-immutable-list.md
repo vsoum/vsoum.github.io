@@ -46,6 +46,16 @@ might be many
 ranging from not being an afterthought when the collections were designed to performance reasons which are inherent in
 immutable data structures.
 
+### Difference between Unmodifiable JDK Collections and this LinkedList
+
+The JDK provides unmodifiable collections which are wrappers around the original collections. They claim to
+support immutability but they are not truly immutable. They are wrappers around the original collections and they
+throw an exception when a modification operation is called. This is not the same as immutability where the data
+structure
+cannot be modified at all while ensuring that it will be difficult to get an UnsupportedOperationException at runtime.
+
+Additionally, JDK unmmodifiable collections do not provide persistence which is a key concept in functional programming.
+
 ### Persistent vs Immutable
 
 Although the terms persistent and immutable are often used interchangeably, they have different meanings.
@@ -314,8 +324,8 @@ future article.
 Let's see some usage examples of our `SeqList`.
 
 * Imagine we have a list of integers and we want to filter out the even numbers and then multiply them in the power of
-   two
-   but with immutability and persistence.
+  two
+  but with immutability and persistence.
 
 ```java
 SeqList<Integer> list = SeqList.of(1, 2, 3, 4, 5, 6);
