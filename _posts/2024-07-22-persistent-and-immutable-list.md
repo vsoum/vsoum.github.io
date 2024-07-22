@@ -48,13 +48,12 @@ immutable data structures.
 
 ### Difference between Unmodifiable JDK Collections and this LinkedList
 
-The JDK provides unmodifiable collections which are wrappers around the original collections. They claim to
-support immutability but they are not truly immutable. They are wrappers around the original collections and they
+The JDK provides unmodifiable collections which are wrappers around the original collections. They
+support immutability but they are not persistent nor provide a true type safe way.
+They are wrappers around the original collections and they
 throw an exception when a modification operation is called. This is not the same as immutability where the data
 structure
 cannot be modified at all while ensuring that it will be difficult to get an UnsupportedOperationException at runtime.
-
-Additionally, JDK unmmodifiable collections do not provide persistence which is a key concept in functional programming.
 
 ### Persistent vs Immutable
 
