@@ -31,16 +31,22 @@ computations inherent in monads.
 It is a real enhancement over the JDK Optional
 class because it provides the following benefits:
 
-1. **Avoids NoSuchElementException**: The Optional class throws a NoSuchElementException if you try to access a
-   value
-   that is not present. The Option monad defines an ADT with two cases: `Some` and `None`. This makes it impossible to
+1. **Avoids NoSuchElementException**: The Option monad defines an ADT with two cases: `Some` and `None`. This makes it
+   impossible to
    access a value that is not present because there is not `get` method in the Option interface at all.
-2. **Avoid NullPointerException**: The Optional class allows you to create an Optional object with a null value.
-   This
-   can lead to a NullPointerException as soon as the call to get is made. The Option monad handles the null by
+2. **Avoid NullPointerException**: The Option monad handles the null by
    instantiating an instance of None.
 3. **Support for Pattern Matching**: Since the Option monad is an ADT, it can be pattern matched. This allows for
    more expressive and readable code.
+
+Whereas the JDK Optional class lacks these features as it erroneously results in:
+
+1. `Optional.of` throws NullPointerException if the provided value is null. This defeats the purpose of having an
+   Optional to handle potentially null values gracefully. It forces the developer to handle nulls before calling `of` or
+   worse using `ofNullable` everywhere.
+2. `get` on an empty Optional throws NoSuchElementException if the Optional is empty. This encourages a pattern where
+   the developer must always check if the Optional is present before calling `get`, leading to something that is not
+   safer than checking for nulls directly.
 
 ### Implementation
 
