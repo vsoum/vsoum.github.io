@@ -65,19 +65,19 @@ functional programming capabilities:
 7. **Delete**: Delete an element at a specific index and return a new list without the deleted element.
 8. **Retrieve**: Retrieve an element at a specific index.
 
-### Differences between `ArraySeq` and `Collections.unmodifiableList`
+### Differences between ArraySeq and Collections.unmodifiableList
 
-1. `Collections.unmodifiableList` returns a view of the list that is unmodifiable. This means that the original list
-   can still be modified and the unmodifiable list will reflect these changes. In contrast, the `ArraySeq` is an
+1. Collections.unmodifiableList returns a view of the list that is unmodifiable. This means that the original list
+   can still be modified and the unmodifiable list will reflect these changes. In contrast, the ArraySeq is an
    immutable list that cannot be modified after it is created.
-2. `Collections.unmodifiableList` is not a monad and does not provide functional programming capabilities such as `map`,
-   `filter`, `flatMap`, etc. In contrast, the `ArraySeq` is a monad that provides these functional programming
+2. Collections.unmodifiableList is not a monad and does not provide functional programming capabilities such as `map`,
+   `filter`, `flatMap`, etc. In contrast, the ArraySeq is a monad that provides these functional programming
    capabilities.
-3. `Collections.unmodifiableList` is not thread safe. In contrast, the `ArraySeq` is an immutable list that is thread
+3. Collections.unmodifiableList is not thread safe. In contrast, the ArraySeq is an immutable list that is thread
    safe and can be shared between different parts of the code without any issues.
-4. `Collections.unmodifiableList` will throw an `UnsupportedOperationException` if a modification operation is called.
-   In contrast, the `ArraySeq` will return a new list with the modified elements. This means that the `ArraySeq` is more
-   predictable as the frequent problem with `Collections.unmodifiableList` is that typically a `java.util.List` is
+4. Collections.unmodifiableList will throw an `UnsupportedOperationException` if a modification operation is called.
+   In contrast, the ArraySeq will return a new list with the modified elements. This means that the ArraySeq is more
+   predictable as the frequent problem with Collections.unmodifiableList is that typically a java.util.List is
    returned and cannot be distinguished from a mutable list.
 
 ## Implementation
