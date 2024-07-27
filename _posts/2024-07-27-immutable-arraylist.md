@@ -2,8 +2,8 @@
 layout: post
 tags: [ Functional Programming, Java ]
 title: "Immutable Java ArrayList Monad"
-featured_image_thumbnail: assets/images/posts/functional/arrayseq_thumbnail.png
-featured_image: assets/images/posts/functional/arrayseq.png
+featured_image_thumbnail: assets/images/posts/functional/arrayseq_thumbnail.webp
+featured_image: assets/images/posts/functional/arrayseq.webp
 ---
 
 In this article, we are going to demonstrate how to implement an immutable ArrayList-Like Monad in Java. We will discuss
