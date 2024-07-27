@@ -80,6 +80,19 @@ functional programming capabilities:
    predictable as the frequent problem with Collections.unmodifiableList is that typically a java.util.List is
    returned and cannot be distinguished from a mutable list.
 
+### What is the subtle issue with Java 9+ List.of method and Guava ImmutableList
+
+When working with Java 9+ and using the `List.of` method to create an immutable list or using Guava's ImmutableList, it
+is important to note that:
+
+1. In the first case the List.of method returns a `java.util.List` which is not distinguishable in the application code
+   from any other typically mutable implementation of the List interface. This may result in
+   accidental `UnsupportedOperationException` being thrown at runtime.
+2. Guava's ImmutableList still is a subtype of `java.util.List` and has the same issues as the `List.of` method.
+
+This is a design issue with both Guava and JDK which they are treating immutable values wrongly and resulting in
+exceptions thrown at runtime which can be avoided by using a proper immutable list implementation.
+
 ## Implementation
 
 ```java
