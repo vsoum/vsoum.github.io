@@ -4,7 +4,6 @@ title: "From Imperative Java -> Functional Part 1"
 tags: [ Java, Spring Boot, Functional Programming ]
 featured_image_thumbnail: assets/images/posts/functional/imperative-to-functional_thumbnail.png
 featured_image: assets/images/posts/functional/imperative-to-functional.png
-featured: true
 ---
 
 In this series of articles, we will explore functional programming principles and apply them to transform a RESTful platform written in Java and Spring Boot using FP concepts and structures.
