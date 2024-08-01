@@ -231,6 +231,9 @@ There are few options when it comes to the JDK Optional. We can either:
    it can cause, you can still use it but with caution. Make sure to thoroughly test your code and be aware of the
    potential pitfalls.
 
+## References
+
+- https://www.sitepoint.com/how-optional-breaks-the-monad-laws-and-why-it-matters/
 
 
 
