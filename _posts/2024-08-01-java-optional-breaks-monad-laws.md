@@ -4,7 +4,6 @@ title: "How the JDK Optional breaks the monad laws and why it matters"
 tags: [ Java, Functional Programming ]
 featured_image_thumbnail: assets/images/posts/functional/monad-laws_thumbnail.png
 featured_image: assets/images/posts/functional/monad-laws.png
-featured: true
 ---
 
 In this article, we are going to prove why the JDK Optional fails to respect the Monad Laws and why it matters.
