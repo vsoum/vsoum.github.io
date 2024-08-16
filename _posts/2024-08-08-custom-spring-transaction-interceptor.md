@@ -4,7 +4,6 @@ title: "Implementing a custom Spring Transaction Interceptor"
 tags: [ Java, Spring Boot ]
 featured_image_thumbnail: assets/images/posts/misc/spring_thumbnail.png
 featured_image: assets/images/posts/misc/spring.png
-featured: true
 ---
 
 In this article, we are going to implement a custom Spring Transaction Interceptor that will allow us to intercept the
