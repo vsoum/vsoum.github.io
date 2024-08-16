@@ -511,3 +511,5 @@ form containing some person specific information and accumulate errors. We compa
 traditional imperative style of using jakarta.validation annotations and the BindingResult class for form validation.
 We also discussed when to use the Validated monad for validation and when not to use it.
 
+You can find the complete implementation at [GitHub](https://github.com/VassilisSoum/Validated-Monad-Spring-Rest)
+
