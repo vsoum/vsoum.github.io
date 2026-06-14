@@ -6,7 +6,7 @@ logo: "assets/images/catnipcoderlogo.png"
 favicon: "assets/images/favicon.ico"
 baseurl:
 production_url: https://www.catnipcoder.com/
-disqus: ""
+disqus:
 mailchimp_url: "https://gmail.us21.list-manage.com/subscribe/post?u=f96be454ea966235860117a2d&amp;id=b699e63785&amp;f_id=00659be6f0"
 cover_image: bc_1.jpg
 # Add your GA Tracking Id
@@ -17,13 +17,13 @@ author:
   name: "Vasilis Soumakis"
   image: "meimage.jpeg"
   greetings: "Hi there!"
-  description: "My name is Vasilis Soumakis. I'm a freelance software engineer and blogger based in Athens, Greece. It’s nice to meet you."
-  bio: "Vasilis is a software engineer and blogger around technical articles and tutorials for the JVM ecosystem."
+  description: "Senior software engineer based in Athens, Greece. I write about code intelligence, LLM-powered systems, and the JVM ecosystem."
+  bio: "Vasilis is a software engineer who writes about code intelligence, LLM-powered systems, and the JVM ecosystem."
 
 # Contact form setings
-email: billsoumakis@email.com
-contact_page_description: "Horace theme comes with a contact form built-in. You can use this form with Formspree service and get up to 50 submissions for free. Also, you can easily switch to another service if you want."
-thankyou_page_description: "Your message has been successfully sent. We will contact you very soon!"
+email: vasilissoum@gmail.com
+contact_page_description: "Have a question about an article, a suggestion for the series, or just want to say hello? Use the form below."
+thankyou_page_description: "Your message has been received. I'll get back to you soon."
 
 # Social links
 github: "VassilisSoum"
