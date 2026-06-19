@@ -7,27 +7,27 @@ featured_image: assets/images/posts/misc/graph-retrieval.jpg
 featured: false
 ---
 
-Embeddings answer conceptual questions. Keyword search answers exact-identifier questions. A code graph answers structural questions — callers, implementors, transitive dependencies. Each of these retrieval methods fails on the other two question types. This article covers how to run all three together and fuse their ranked outputs into a single list using reciprocal rank fusion.
+Semantic search returns code that looks like what you asked about. Useful for conceptual questions, less so for everything else. The remaining questions split between exact-identifier lookup (you know the symbol name and want its definition) and structural traversal (you want callers, implementors, or the methods a change would touch). Each method handles its own question type well and handles the other two poorly. Running all three together and fusing their ranked outputs through reciprocal rank fusion covers the full range.
 
 <!--more-->
 
 ## Three retrieval lanes
 
-The previous article in this series built a symbol-granular embedding index. That index handles queries like "how does the system handle expired sessions?" — natural-language questions where the user does not know the specific identifier names. The embedding model maps the query and the stored chunks into the same space, and the closest neighbours come back as results.
+The [previous article](/symbol-granular-chunking-for-code-retrieval) built a symbol-granular embedding index. That index handles natural-language questions where the identifier names are unknown: "how does the system handle expired sessions?" The embedding model maps query and chunks into the same space and returns nearest neighbours.
 
-Two question types it cannot handle well.
+Two question types it handles poorly.
 
-"Find the definition of `findUserByEmail`." The embedding index returns code that is *conceptually* about finding users by email — a superset that includes related classes, helper methods, and tests. Keyword search returns the symbol literally named `findUserByEmail` at rank 1.
+"Find the definition of `findUserByEmail`." The embedding index returns code *conceptually* about finding users by email: related classes, helper methods, tests. Keyword search returns the symbol literally named `findUserByEmail` at rank 1.
 
-"What calls `validateSession`?" The embedding index returns code that *looks like* it might call `validateSession`. The call graph returns every caller exactly and completely. A top-K similarity result is the wrong tool for a question whose answer is "all nodes with an outgoing CALLS edge to this method."
+"What calls `validateSession`?" The embedding index returns code that *looks like* it might call the method. The call graph returns every caller, exactly and completely. Top-K similarity is the wrong tool for a question whose answer is "all nodes with an outgoing CALLS edge to this method."
 
-The three lanes cover different territory. Running all three and fusing their results beats any single lane on the queries that mix modes — and there are more of those than you'd expect.
+Real queries mix these modes more than the categories suggest. A user describes a symbol by behaviour when they half-remember the name. A structural question arrives about something found through semantic search first. Running all three lanes and fusing the results handles that overlap.
 
 ## BM25 for code
 
-BM25 is the ranking function behind most keyword search systems. The intuition: a document scores highly when it contains the query's terms, especially rare ones, in a short body. The formula normalises for document length and term frequency so scores are comparable across the corpus.
+BM25 is the ranking function behind most keyword search systems. A document scores highly when it contains the query's terms, especially rare ones, in a short body. The formula normalises for document length and term frequency so scores are comparable across the corpus.
 
-The one adjustment BM25 needs for source code is a tokeniser that understands identifier naming conventions. A standard whitespace tokeniser treats `processOrderRefund` as one opaque token. A query for `Order` should match it; a standard tokeniser would not make that connection.
+For source code, one adjustment is needed: a tokeniser that understands identifier naming conventions. A standard whitespace tokeniser treats `processOrderRefund` as one opaque token. A query for `Order` should match it; a standard tokeniser makes no connection.
 
 ```python
 import re
@@ -120,13 +120,13 @@ def graph_search(
     return results[:top_k]
 ```
 
-A query for "what calls `validateSession`?" runs `graph_search("com.example.auth.validateSession", ["CALLS"], direction="incoming", depth=1)` and returns the complete set of direct callers. Depth 2 returns callers-of-callers. The graph does not rank these — the fusion step handles ordering.
+A query for "what calls `validateSession`?" runs `graph_search("com.example.auth.validateSession", ["CALLS"], direction="incoming", depth=1)` and returns the complete set of direct callers. Depth 2 returns callers-of-callers. The graph does not rank these; the fusion step handles ordering.
 
 The graph's answer is exact within the statically resolved call graph. Dynamic dispatch, reflection, and configuration-driven routing are outside what static analysis can see. For codebases that rely heavily on those patterns, the graph undercounts callers and keyword search on the method name provides a useful complement.
 
 ## Reciprocal rank fusion
 
-Three ranked lists arrive, scored on incompatible scales. Embedding similarity scores cluster between 0.4 and 0.9. BM25 scores spike or fall to zero with no upper bound. The graph produces an unordered set with no scores at all. Adding them up with weights does not work — whichever lane has the densest score cluster at the top will dominate regardless of the weights.
+Three ranked lists arrive, scored on incompatible scales. Embedding similarity scores cluster between 0.4 and 0.9. BM25 scores spike or fall to zero with no upper bound. The graph produces an unordered set with no scores at all. Adding them up with weights does not work: whichever lane has the densest score cluster at the top dominates regardless of the weights.
 
 Reciprocal rank fusion (RRF) ignores raw scores entirely. The fused score for a document `d` across a set of rankings is:
 
@@ -164,12 +164,7 @@ RRF(G) = 1/(60+2) ≈ 0.0161
 
 `A` and `B` rise to the top because they appear across multiple lanes. `G` is buried despite ranking well in its single lane. Agreement across lanes is a stronger signal than dominance within one.
 
-The properties that make RRF practical:
-
-- No score normalisation needed — rank position is the only input
-- A lane that is absent for a given document contributes 0, not a penalty
-- One tunable parameter (`k`), and the default of 60 works well across applications
-- Deterministic with a stable tie-break
+RRF is practical for four reasons: rank position is the only input, so no score normalisation is needed; a lane absent for a given document contributes 0 rather than a penalty; there is one tunable parameter (`k`) and the default of 60 works across most applications; and the sort is deterministic with a stable tie-break.
 
 ```python
 from collections import defaultdict
@@ -198,7 +193,7 @@ def reciprocal_rank_fusion(
 
 The `first_seen` map gives a deterministic tie-break: documents with identical fused scores are ordered by when they first appeared across the input rankings. Without this, the sort order depends on dict iteration order, which is an insertion-order detail you should not rely on.
 
-## Putting it together
+## Running lanes concurrently
 
 The three lanes are independent and run concurrently. Each gets a per-lane timeout so a slow embedding service or a graph blip does not block the whole query.
 
@@ -239,15 +234,15 @@ async def hybrid_search(
     return [doc_id for doc_id, _ in reciprocal_rank_fusion(rankings)]
 ```
 
-The graph lane needs a seed node — a starting symbol to traverse from. The seed comes either from the question directly (the user named a symbol), from a planner that parsed an identifier out of the question text, or from the top result of a keyword pre-pass when the question described a symbol without naming it.
+The graph lane needs a seed node: a starting symbol to traverse from. The seed comes either from the question directly (the user named a symbol), from a planner that parsed an identifier out of the question text, or from the top result of a keyword pre-pass when the question described a symbol without naming it.
 
 ## Which lanes to run
 
 Not every question benefits from all three lanes. Running all three when only one is relevant adds latency and dilutes the fused result.
 
-The decision is short. If the question contains an explicit identifier (backtick-quoted or recognisably formatted), run keyword and graph — embedding returns a vague superset and is not worth the latency. If the question is structural ("what calls", "what implements", "what changes if"), run the graph from the named seed; add keyword when dynamic dispatch could produce callers the graph cannot see. If the question is conceptual — describing behaviour in natural language with no specific identifier — run embedding, plus keyword if the question contains domain vocabulary that maps to identifiers. For everything that mixes these shapes, run all three.
+If the question contains an explicit identifier (backtick-quoted or recognisably formatted), run keyword and graph: embedding returns a vague superset and is not worth the latency. If the question is structural ("what calls", "what implements", "what changes if"), run the graph from the named seed and add keyword when dynamic dispatch could produce callers the graph cannot see. If the question is conceptual, in natural language with no specific identifier, run embedding plus keyword when the question contains domain vocabulary that maps to identifiers. For everything that mixes these shapes, run all three.
 
-On a measured evaluation set, RRF fusion beats the best single lane by a small margin on pure-mode questions and a large margin on mixed-mode questions — which are more common than they look because real users phrase questions informally.
+On a measured evaluation set, RRF fusion beats the best single lane by a small margin on pure-mode questions and by a larger margin on mixed-mode ones. Mixed-mode questions are more common than the categories suggest: real users phrase questions informally, and the phrasing rarely maps cleanly to a single retrieval strategy.
 
 ---
 
