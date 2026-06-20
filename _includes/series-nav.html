@@ -1,0 +1,24 @@
+{% if page.series %}
+  {% for s in site.data.series %}
+    {% if s.name == page.series %}
+    <div class="series-nav">
+      <span class="series-label">Series</span>
+      <h3 class="series-nav-title">{{ s.name }}</h3>
+      <p class="series-description">{{ s.description }}</p>
+      <ol class="series-list">
+        {% for article in s.articles %}
+          <li>
+            {% if forloop.index == page.series_index %}
+              <span class="series-item--current">{{ article.title }}</span>
+            {% elsif article.url != "" %}
+              <a href="{{ article.url }}">{{ article.title }}</a>
+            {% else %}
+              <span class="series-item--upcoming">{{ article.title }} <em>(coming soon)</em></span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ol>
+    </div>
+    {% endif %}
+  {% endfor %}
+{% endif %}

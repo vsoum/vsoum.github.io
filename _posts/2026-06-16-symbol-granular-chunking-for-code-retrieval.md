@@ -1,10 +1,13 @@
 ---
 layout: post
 title: "Symbol-granular chunking for code retrieval"
+description: "Character-count chunking produces the wrong retrieval boundary for source code. This article covers symbol-granular extraction with tree-sitter, the header-prefix technique for disambiguation, and late chunking for same-name symbols across different classes."
 tags: [ LLM, AI, Python, Reliable by Design ]
 featured_image_thumbnail: assets/images/posts/misc/code-chunking_thumbnail.jpg
 featured_image: assets/images/posts/misc/code-chunking.jpg
 featured: false
+series: "Reliable by Design"
+series_index: 2
 ---
 
 Most RAG tutorials show you how to chunk documents: split on character count, add overlap, embed each chunk, store. For prose — docs, wikis, READMEs — this produces a working system. For source code it produces a system that looks like it works and retrieves the wrong thing regularly. This article covers why, what the right boundary is, and how to implement it using tree-sitter.

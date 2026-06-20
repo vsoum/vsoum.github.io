@@ -6,10 +6,8 @@ title: Home
 {% if page.url == "/" %}
 <!-- Featured-->
 <div class="featured-posts outer">
-    {% for post in site.posts %}
-        {% if post.featured == true %}
-            {% include featuredbox.html %}
-        {% endif %}
+    {% for post in site.posts limit:1 %}
+        {% include featuredbox.html %}
     {% endfor %}
 </div>
 {% endif %}

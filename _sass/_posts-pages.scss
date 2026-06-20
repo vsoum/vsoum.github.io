@@ -316,3 +316,58 @@
   margin: 0 3px 0.5em;
   width: 36px;
 }
+
+/* Series navigation */
+.series-nav {
+  background: $gray-lightest;
+  border: 1px solid $gray-lighter;
+  border-left: 3px solid $color-accent;
+  border-radius: 0 8px 8px 0;
+  margin: 2.5em 0;
+  padding: 1.5em 1.66667em;
+}
+
+.series-label {
+  color: $color-accent;
+  font-size: 0.66667rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.series-nav-title {
+  color: $gray-darkest;
+  font-size: 1rem;
+  margin: 0.25em 0 0.5em;
+}
+
+.series-description {
+  color: $gray;
+  font-size: 0.83333rem;
+  margin: 0 0 1em;
+}
+
+.series-list {
+  list-style: decimal;
+  margin: 0;
+  padding-left: 1.5em;
+}
+
+.series-list li {
+  font-size: 0.88889rem;
+  line-height: 1.6;
+  margin-bottom: 0.4em;
+}
+
+.series-item--current {
+  color: $gray-darkest;
+  font-weight: bold;
+}
+
+.series-item--upcoming {
+  color: $gray;
+}
+
+.series-item--upcoming em {
+  font-size: 0.85em;
+}

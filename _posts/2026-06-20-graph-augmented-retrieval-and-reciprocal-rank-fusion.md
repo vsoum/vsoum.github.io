@@ -1,10 +1,13 @@
 ---
 layout: post
 title: "Graph-augmented retrieval and reciprocal rank fusion"
+description: "Three retrieval lanes—semantic embeddings, BM25 with a code-aware tokeniser, and code graph traversal—cover different question types. This article covers building all three and fusing their rankings through reciprocal rank fusion."
 tags: [ LLM, AI, Python, Reliable by Design ]
 featured_image_thumbnail: assets/images/posts/misc/graph-retrieval_thumbnail.jpg
 featured_image: assets/images/posts/misc/graph-retrieval.jpg
 featured: false
+series: "Reliable by Design"
+series_index: 3
 ---
 
 Semantic search returns code that looks like what you asked about. Useful for conceptual questions, less so for everything else. The remaining questions split between exact-identifier lookup (you know the symbol name and want its definition) and structural traversal (you want callers, implementors, or the methods a change would touch). Each method handles its own question type well and handles the other two poorly. Running all three together and fusing their ranked outputs through reciprocal rank fusion covers the full range.

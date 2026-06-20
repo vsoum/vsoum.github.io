@@ -21,6 +21,7 @@ post_class: post-template
             <div class="post-content">
                 {{content}}
             </div>
+            {% include series-nav.html %}
             <footer class="post-footer">
                 {% if page.tags.size > 0 %}
                 <p class="post-tags">
