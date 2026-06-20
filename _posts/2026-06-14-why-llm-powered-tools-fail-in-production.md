@@ -8,6 +8,7 @@ featured_image: assets/images/posts/misc/llm-tools.jpg
 featured: true
 series: "Reliable by Design"
 series_index: 1
+toc: true
 ---
 
 LLM-powered developer tools work in demos. They summarize a file, answer a question about a class, explain a function. Then they hit a real codebase — large, cross-repository, underdocumented — and the answers become wrong in ways that are hard to detect. This article explains why that happens and what a system that avoids it looks like.

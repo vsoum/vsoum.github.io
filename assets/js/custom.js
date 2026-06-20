@@ -43,9 +43,45 @@
 			e.preventDefault();
 		});
 
+		// Reading progress bar
+		var progressBar = document.getElementById('reading-progress');
+		if (progressBar) {
+			window.addEventListener('scroll', function () {
+				var scrolled = window.scrollY;
+				var total = document.documentElement.scrollHeight - window.innerHeight;
+				progressBar.style.width = (total > 0 ? (scrolled / total * 100) : 0) + '%';
+			});
+		}
+
 	});
 
 }(jQuery));
+
+// Table of contents
+document.addEventListener('DOMContentLoaded', function () {
+    if (!document.getElementById('toc-enabled')) return;
+    var headings = document.querySelectorAll('.post-content h2');
+    if (headings.length < 2) return;
+    var toc = document.createElement('nav');
+    toc.className = 'toc';
+    var title = document.createElement('p');
+    title.className = 'toc-title';
+    title.textContent = 'In this article';
+    var list = document.createElement('ol');
+    list.className = 'toc-list';
+    headings.forEach(function (heading) {
+        var item = document.createElement('li');
+        var link = document.createElement('a');
+        link.href = '#' + heading.id;
+        link.textContent = heading.textContent;
+        item.appendChild(link);
+        list.appendChild(item);
+    });
+    toc.appendChild(title);
+    toc.appendChild(list);
+    var postContent = document.querySelector('.post-content');
+    if (postContent) postContent.insertBefore(toc, postContent.firstChild);
+});
 
 // Copy-to-clipboard buttons for code blocks
 document.addEventListener('DOMContentLoaded', function () {

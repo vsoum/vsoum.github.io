@@ -36,6 +36,8 @@ navigation:
     url: /about
   - text: Archive
     url: /tags
+  - text: Search
+    url: /search
 
 # Required Plugins
 plugins_dir:

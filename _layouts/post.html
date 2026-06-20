@@ -4,6 +4,7 @@ disqus: false
 post_class: post-template
 ---
 
+<div id="reading-progress"></div>
 <div id="content" class="site-content fadeInDown delay_075s">
     <main id="main" class="site-main outer">
         <article class="post-full inner">
@@ -19,6 +20,7 @@ post_class: post-template
             <div class="post-thumbnail"><img class="featured-image img-fluid"
                     src="{{ site.baseurl }}{{ page.featured_image }}" alt="{{ page.title }}"></div>
             {% endif %}
+            {% if page.toc %}<div id="toc-enabled" style="display:none"></div>{% endif %}
             <div class="post-content">
                 {{content}}
             </div>
@@ -110,5 +112,6 @@ post_class: post-template
             </article>
             {% endif %}
         </section><!-- .read-next -->
+        {% include related-posts.html %}
     </main><!-- .site-main -->
 </div><!-- .site-content -->

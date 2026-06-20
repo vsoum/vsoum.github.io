@@ -79,6 +79,10 @@
     <script src="{{ site.baseurl }}/assets/js/jquery-3.6.0.min.js"></script>
     <script src="{{ site.baseurl }}/assets/js/plugins.js"></script>
     <script src="{{ site.baseurl }}/assets/js/custom.js"></script>
+    {% if page.search %}
+    <script src="https://unpkg.com/lunr/lunr.js" defer></script>
+    <script src="{{ site.baseurl }}/assets/js/search.js" defer></script>
+    {% endif %}
 
 </body>
 

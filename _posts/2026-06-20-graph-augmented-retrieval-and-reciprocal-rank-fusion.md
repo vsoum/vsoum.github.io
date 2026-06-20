@@ -8,6 +8,7 @@ featured_image: assets/images/posts/misc/graph-retrieval.jpg
 featured: false
 series: "Reliable by Design"
 series_index: 3
+toc: true
 ---
 
 Semantic search returns code that looks like what you asked about. Useful for conceptual questions, less so for everything else. The remaining questions split between exact-identifier lookup (you know the symbol name and want its definition) and structural traversal (you want callers, implementors, or the methods a change would touch). Each method handles its own question type well and handles the other two poorly. Running all three together and fusing their ranked outputs through reciprocal rank fusion covers the full range.

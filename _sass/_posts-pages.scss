@@ -398,3 +398,153 @@ pre {
   background: rgba(255, 255, 255, 0.18);
   color: rgba(255, 255, 255, 0.9);
 }
+
+/* Reading progress bar */
+#reading-progress {
+  background: $color-accent;
+  height: 3px;
+  left: 0;
+  position: fixed;
+  top: 0;
+  transition: width 0.1s linear;
+  width: 0%;
+  z-index: 9999;
+}
+
+/* Table of contents */
+.toc {
+  background: $gray-lightest;
+  border: 1px solid $gray-lighter;
+  border-left: 3px solid $color-accent;
+  border-radius: 0 8px 8px 0;
+  margin: 0 0 2.5em;
+  padding: 1.25em 1.66667em;
+}
+
+.toc-title {
+  color: $gray-dark;
+  font-size: 0.66667rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin: 0 0 0.75em;
+  text-transform: uppercase;
+}
+
+.toc-list {
+  list-style: decimal;
+  margin: 0;
+  padding-left: 1.5em;
+}
+
+.toc-list li {
+  font-size: 0.88889rem;
+  line-height: 1.6;
+  margin-bottom: 0.3em;
+}
+
+.toc-list a {
+  color: $gray-darkest;
+}
+
+.toc-list a:hover {
+  color: $color-accent;
+}
+
+/* Related articles */
+.related-posts {
+  border-top: 1px solid $gray-lighter;
+  margin-top: 3.33333em;
+  padding-top: 2em;
+}
+
+.related-posts-title {
+  color: $gray-dark;
+  font-size: 14px;
+  font-weight: normal;
+  letter-spacing: 2px;
+  margin: 0 0 2.14285em;
+  text-transform: uppercase;
+}
+
+.related-posts-title:after {
+  background-color: $color-accent;
+  display: block;
+  content: "";
+  height: 1px;
+  margin-top: 15px;
+  width: 60px;
+}
+
+.related-posts .post {
+  display: flex;
+  margin-bottom: 1.66667em;
+}
+
+.related-posts .post-header {
+  flex: 1 1 auto;
+  margin-bottom: 0.83333em;
+}
+
+.related-posts .post-meta {
+  margin-bottom: 0.5em;
+}
+
+.related-posts .post-title {
+  font-size: 1.33333rem;
+  margin: 0;
+}
+
+.related-posts .post-tags {
+  margin: 1.07142em 0 0;
+}
+
+.related-posts .post-thumbnail {
+  flex: 0 0 auto;
+  margin: 0 0 0.83333em 30px;
+  width: 150px;
+}
+
+.related-posts .post-thumbnail img {
+  width: 100%;
+}
+
+/* Search page */
+.search-wrap {
+  margin: 2em 0;
+}
+
+.search-input {
+  border: 1px solid $gray-lighter;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: $font-primary;
+  font-size: 1rem;
+  outline: none;
+  padding: 0.66667em 1em;
+  transition: border-color 0.15s;
+  width: 100%;
+}
+
+.search-input:focus {
+  border-color: $color-accent;
+}
+
+.search-results {
+  margin-top: 2em;
+}
+
+.search-result {
+  border-bottom: 1px solid $gray-lighter;
+  margin-bottom: 1.66667em;
+  padding-bottom: 1.66667em;
+}
+
+.search-result .post-title {
+  font-size: 1.33333rem;
+  margin: 0 0 0.4em;
+}
+
+.search-no-results {
+  color: $gray;
+  font-size: 0.88889rem;
+}
