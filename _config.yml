@@ -52,6 +52,7 @@ permalink: /:title
 
 # Other
 markdown: kramdown
+timezone: Europe/Athens
 
 # Sass
 sass:
