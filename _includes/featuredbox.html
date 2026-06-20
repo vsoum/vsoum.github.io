@@ -1,7 +1,7 @@
 <article class="{{post_class}} post-featured inner">
     <header class="post-header">
         <div class="post-meta">
-            <span class="featured-badge">Featured</span> &sol; {{/if}}
+            <span class="featured-badge">Featured</span> &sol;
             <time class="published" datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: "%B %-d, %Y" }}</time>
         </div><!-- .post-meta -->
         <h2 class="post-title">
@@ -9,7 +9,7 @@
         </h2>
     </header><!-- .post-header -->
     {% if post.featured_image %}
-        <a href="{{ post.url | absolute_url }}" class="post-thumbnail"><img src="{{ post.featured_image | prepend: site.baseurl }}" alt="{% if post.featured_image_alt %}{{ post.featured_image_alt }}{% else %}{{ post.title }}{% endif %}"></a>
+        <a href="{{ post.url | absolute_url }}" class="post-thumbnail"><img src="{{ post.featured_image | prepend: site.baseurl }}" alt="{% if post.featured_image_alt %}{{ post.featured_image_alt }}{% else %}{{ post.title }}{% endif %}"{% if post.featured_image_width %} width="{{ post.featured_image_width }}" height="{{ post.featured_image_height }}"{% endif %} decoding="async" fetchpriority="high"></a>
     {% endif %}
     <div class="post-content">
         {% if post.content contains '<!--more-->' %} {{ post.content | split:'<!--more-->' | first }}

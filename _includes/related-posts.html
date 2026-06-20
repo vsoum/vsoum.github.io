@@ -36,7 +36,7 @@
         </header>
         {% if p.featured_image_thumbnail %}
         <a href="{{ p.url }}" class="post-thumbnail">
-          <img src="{{ p.featured_image_thumbnail | absolute_url }}" alt="{{ p.title }}" />
+          <img src="{{ p.featured_image_thumbnail | absolute_url }}" alt="{{ p.title }}" loading="lazy" decoding="async" />
         </a>
         {% endif %}
       </article>

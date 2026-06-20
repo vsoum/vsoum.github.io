@@ -1,6 +1,8 @@
 # Site setings
 name: "CatnipCoder"
-description: "Catnip coder is a technical blog for software engineers who want to elevate their skills."
+title: "CatnipCoder"
+tagline: "Code intelligence, LLM-powered developer tools, and the JVM"
+description: "Engineering deep-dives on code intelligence, LLM-powered developer tools, and the JVM ecosystem, by Vasilis Soumakis."
 meta_description: "Technical blog, perfect for software engineers."
 logo: "assets/images/catnipcoderlogo.png"
 favicon: "assets/images/favicon.ico"
@@ -41,6 +43,8 @@ linkedin: "bill-soumakis-b206a339"
 navigation:
   - text: About
     url: /about
+  - text: Series
+    url: /series/reliable-by-design/
   - text: Archive
     url: /tags
   - text: Search

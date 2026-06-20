@@ -8,6 +8,7 @@
 
     {% if site.plugins_dir contains 'jekyll-seo-tag' %}
         {% include head-seo.html %}
+        {% include extra-meta.html %}
     {% else %}
         <title>{% if page.title %}{{ page.title | escape }}{% else %}{{ site.name | escape }}{% endif %}</title>
         <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | normalize_whitespace | truncate: 160 | escape }}">

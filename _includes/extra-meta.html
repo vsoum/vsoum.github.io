@@ -1,0 +1,28 @@
+{% if page.layout == "post" %}
+<meta property="article:modified_time" content="{{ page.last_modified_at | default: page.date | date_to_xmlschema }}">
+<meta property="article:author" content="{{ site.author.name }}">
+{% for tag in page.tags %}<meta property="article:tag" content="{{ tag | escape }}">
+{% endfor %}{% if page.image %}<meta property="og:image:alt" content="{{ page.title | escape }}">
+<meta name="twitter:image:alt" content="{{ page.title | escape }}">
+{% endif %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ '/' | absolute_url }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ page.title | escape }}",
+      "item": "{{ page.url | absolute_url }}"
+    }
+  ]
+}
+</script>
+{% endif %}

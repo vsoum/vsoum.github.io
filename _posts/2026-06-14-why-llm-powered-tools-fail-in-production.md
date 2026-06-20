@@ -1,10 +1,12 @@
 ---
 layout: post
 title: "Why LLM-powered tools fail in production"
-description: "LLM-powered developer tools work well in demos and break in production. The cause is not model quality—it is what the model receives: missing context, unstructured orchestration, and no mechanism for verification."
+description: "Why LLM-powered developer tools work in demos but fail on real codebases, and the retrieval, orchestration, and verification gaps behind it."
 tags: [ LLM, AI, Software Engineering, Reliable by Design ]
 featured_image_thumbnail: assets/images/posts/misc/llm-tools_thumbnail.jpg
 featured_image: assets/images/posts/misc/llm-tools.jpg
+featured_image_width: 1024
+featured_image_height: 980
 image: /assets/images/posts/misc/llm-tools.jpg
 featured: true
 series: "Reliable by Design"

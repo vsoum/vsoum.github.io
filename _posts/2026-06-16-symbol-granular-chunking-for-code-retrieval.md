@@ -1,10 +1,12 @@
 ---
 layout: post
 title: "Symbol-granular chunking for code retrieval"
-description: "Character-count chunking produces the wrong retrieval boundary for source code. This article covers symbol-granular extraction with tree-sitter, the header-prefix technique for disambiguation, and late chunking for same-name symbols across different classes."
+description: "Why character-count chunking breaks on source code, and how symbol-granular extraction with tree-sitter and late chunking fix code retrieval."
 tags: [ LLM, AI, Python, Reliable by Design ]
 featured_image_thumbnail: assets/images/posts/misc/code-chunking_thumbnail.jpg
 featured_image: assets/images/posts/misc/code-chunking.jpg
+featured_image_width: 1024
+featured_image_height: 980
 image: /assets/images/posts/misc/code-chunking.jpg
 featured: false
 series: "Reliable by Design"

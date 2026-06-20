@@ -3,7 +3,11 @@
     {% if s.name == page.series %}
     <div class="series-nav">
       <span class="series-label">Series</span>
+      {% if s.name == "Reliable by Design" %}
+      <h3 class="series-nav-title"><a href="/series/reliable-by-design/">{{ s.name }}</a></h3>
+      {% else %}
       <h3 class="series-nav-title">{{ s.name }}</h3>
+      {% endif %}
       <p class="series-description">{{ s.description }}</p>
       <ol class="series-list">
         {% for article in s.articles %}

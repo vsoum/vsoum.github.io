@@ -18,7 +18,9 @@ post_class: post-template
             </header><!-- .post-header -->
             {% if page.featured_image %}
             <div class="post-thumbnail"><img class="featured-image img-fluid"
-                    src="{{ site.baseurl }}{{ page.featured_image }}" alt="{{ page.title }}"></div>
+                    src="{{ site.baseurl }}{{ page.featured_image }}" alt="{{ page.title }}"
+                    {% if page.featured_image_width %}width="{{ page.featured_image_width }}" height="{{ page.featured_image_height }}"{% endif %}
+                    decoding="async" fetchpriority="high"></div>
             {% endif %}
             {% if page.toc %}<div id="toc-enabled" style="display:none"></div>{% endif %}
             <div class="post-content">
@@ -74,11 +76,11 @@ post_class: post-template
                 </header>
                 {% if page.previous.featured_image_thumbnail %}
                 <a href="{{ site.baseurl }}{{page.previous.url}}" class="post-thumbnail">
-                    <img src="{{ page.previous.featured_image_thumbnail }}" alt="{{page.previous.title}}" />
+                    <img src="{{ page.previous.featured_image_thumbnail }}" alt="{{page.previous.title}}" loading="lazy" decoding="async" />
                 </a>
                 {% elsif page.previous.featured_image %}
                 <a href="{{ site.baseurl }}{{page.previous.url}}" class="post-thumbnail">
-                    <img src="{{ page.previous.featured_image }}" alt="{{page.previous.title}}" />
+                    <img src="{{ page.previous.featured_image }}" alt="{{page.previous.title}}" loading="lazy" decoding="async" />
                 </a>
                 {% else %}
                 {% endif %}
@@ -101,11 +103,11 @@ post_class: post-template
                 </header>
                 {% if page.next.featured_image_thumbnail %}
                 <a href="{{ site.baseurl }}{{page.next.url}}" class="post-thumbnail">
-                    <img src="{{ page.next.featured_image_thumbnail }}" alt="{{page.next.title}}" />
+                    <img src="{{ page.next.featured_image_thumbnail }}" alt="{{page.next.title}}" loading="lazy" decoding="async" />
                 </a>
                 {% elsif page.next.featured_image %}
                 <a href="{{ site.baseurl }}{{page.next.url}}" class="post-thumbnail">
-                    <img src="{{ page.next.featured_image }}" alt="{{page.next.title}}" />
+                    <img src="{{ page.next.featured_image }}" alt="{{page.next.title}}" loading="lazy" decoding="async" />
                 </a>
                 {% else %}
                 {% endif %}
