@@ -1,0 +1,161 @@
+/**
+ * Dark mode
+ * ----------------------------------------------------------------------------
+ * Applied via a `.dark-mode` class on <html>, set inline in <head> before paint.
+ * The code blocks are already dark in the light theme; here the page background
+ * is kept a shade darker than the code panels so code stays visually distinct.
+ */
+
+$dark-bg: #16171a;
+$dark-surface: #202225;
+$dark-border: #2c2e33;
+$dark-text: #c7c8cc;
+$dark-heading: #f1f3f5;
+$dark-muted: #8e9095;
+$dark-accent: #ff5c9d;
+
+.dark-mode {
+  background: $dark-bg;
+
+  body {
+    background: $dark-bg;
+    color: $dark-text;
+  }
+
+  .site {
+    background: $dark-bg;
+  }
+
+  h1, h2, h3, h4, h5, h6,
+  .posttitle,
+  caption, th {
+    color: $dark-heading;
+  }
+
+  a {
+    color: $dark-accent;
+  }
+
+  a:hover {
+    color: #fff;
+  }
+
+  /* Header */
+  .site-header {
+    background: $dark-surface;
+    border-bottom-color: $dark-border;
+  }
+
+  .site-header a {
+    color: $dark-heading;
+  }
+
+  .site-header a:hover {
+    color: $dark-accent;
+  }
+
+  /* Post chrome */
+  .post-meta,
+  .post-date,
+  .series-description,
+  .related-posts-title,
+  .read-next-title {
+    color: $dark-muted;
+  }
+
+  hr {
+    background-color: $dark-border;
+  }
+
+  th, td {
+    border-bottom-color: $dark-border;
+  }
+
+  blockquote {
+    color: $dark-heading;
+  }
+
+  /* Inline code keeps the dark panel look; ensure it stays legible */
+  :not(pre) > code {
+    background: $dark-surface;
+    color: #e8b3cd;
+    border-radius: 4px;
+  }
+
+  /* Code blocks: add a hairline so the panel reads against the darker page */
+  pre,
+  pre[class*="language-"] {
+    border: 1px solid $dark-border;
+  }
+
+  /* Boxed components */
+  .series-nav,
+  .toc {
+    background: $dark-surface;
+    border-color: $dark-border;
+    border-left-color: $color-accent;
+  }
+
+  .series-nav-title,
+  .series-item--current {
+    color: $dark-heading;
+  }
+
+  .toc-list a {
+    color: $dark-text;
+  }
+
+  .toc-list a:hover,
+  .series-list a:hover {
+    color: $dark-accent;
+  }
+
+  .related-posts {
+    border-top-color: $dark-border;
+  }
+
+  /* Read Next / related thumbnails and titles */
+  .read-next .post-title a,
+  .related-posts .post-title a {
+    color: $dark-heading;
+  }
+
+  /* Form fields, search */
+  input,
+  select,
+  textarea,
+  .search-input {
+    background: $dark-surface;
+    border-color: $dark-border;
+    color: $dark-text;
+  }
+
+  .search-result {
+    border-bottom-color: $dark-border;
+  }
+
+  /* Author / circle buttons */
+  .social-links a,
+  .top-button,
+  .newer-posts,
+  .older-posts {
+    background: $dark-surface;
+    color: $dark-text;
+  }
+
+  .social-links a:hover,
+  .top-button:hover {
+    background: $color-accent;
+    color: #fff;
+  }
+
+  /* Theme toggle icon colour in dark mode */
+  .theme-toggle {
+    color: $dark-text;
+  }
+
+  .contact-form {
+    background: $dark-surface;
+    border-color: $dark-border;
+  }
+}

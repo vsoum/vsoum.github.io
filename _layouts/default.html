@@ -25,6 +25,22 @@
     <!-- CSS Styles -->
     <link href="{{ site.baseurl }}/assets/css/style.css" rel="stylesheet">
 
+    <!-- RSS feed autodiscovery -->
+    <link rel="alternate" type="application/rss+xml" title="{{ site.name }} RSS Feed" href="{{ '/feed.xml' | absolute_url }}">
+
+    <!-- Set colour scheme before paint to avoid a flash of the wrong theme -->
+    <script>
+        (function () {
+            try {
+                var stored = localStorage.getItem('theme');
+                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (stored === 'dark' || (stored === null && prefersDark)) {
+                    document.documentElement.classList.add('dark-mode');
+                }
+            } catch (e) {}
+        })();
+    </script>
+
 </head>
 
 {% capture layout %}{% if page.layout %}layout-{{ page.layout }}{% endif %}{% endcapture %}

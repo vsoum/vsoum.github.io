@@ -5,6 +5,7 @@ description: "Character-count chunking produces the wrong retrieval boundary for
 tags: [ LLM, AI, Python, Reliable by Design ]
 featured_image_thumbnail: assets/images/posts/misc/code-chunking_thumbnail.jpg
 featured_image: assets/images/posts/misc/code-chunking.jpg
+image: /assets/images/posts/misc/code-chunking.jpg
 featured: false
 series: "Reliable by Design"
 series_index: 2

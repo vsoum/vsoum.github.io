@@ -53,6 +53,15 @@
 			});
 		}
 
+		// Dark mode toggle (initial class is set inline in <head> to avoid a flash)
+		$('#theme-toggle').on('click', function (e) {
+			e.preventDefault();
+			var isDark = document.documentElement.classList.toggle('dark-mode');
+			try {
+				localStorage.setItem('theme', isDark ? 'dark' : 'light');
+			} catch (err) {}
+		});
+
 	});
 
 }(jQuery));
@@ -83,13 +92,23 @@ document.addEventListener('DOMContentLoaded', function () {
     if (postContent) postContent.insertBefore(toc, postContent.firstChild);
 });
 
-// Copy-to-clipboard buttons for code blocks
+// Copy-to-clipboard buttons and language labels for code blocks
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('pre > code').forEach(function (codeBlock) {
+        var pre = codeBlock.parentNode;
+
+        // Language label, read from the kramdown/Prism `language-xxx` class
+        var match = (codeBlock.className || pre.className || '').match(/language-([\w-]+)/);
+        if (match && match[1] && match[1] !== 'text') {
+            var label = document.createElement('span');
+            label.className = 'code-lang';
+            label.textContent = match[1];
+            pre.appendChild(label);
+        }
+
         var button = document.createElement('button');
         button.className = 'copy-btn';
         button.textContent = 'Copy';
-        var pre = codeBlock.parentNode;
         pre.appendChild(button);
         button.addEventListener('click', function () {
             navigator.clipboard.writeText(codeBlock.innerText).then(function () {
@@ -97,5 +116,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 setTimeout(function () { button.textContent = 'Copy'; }, 1500);
             });
         });
+    });
+});
+
+// Click-to-copy anchor links on article headings
+document.addEventListener('DOMContentLoaded', function () {
+    var postContent = document.querySelector('.post-content');
+    if (!postContent) return;
+    postContent.querySelectorAll('h2[id], h3[id]').forEach(function (heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.setAttribute('aria-label', 'Link to this section');
+        anchor.textContent = '#';
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            var url = window.location.href.split('#')[0] + '#' + heading.id;
+            history.replaceState(null, '', '#' + heading.id);
+            heading.scrollIntoView();
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(function () {
+                    anchor.classList.add('copied');
+                    setTimeout(function () { anchor.classList.remove('copied'); }, 1200);
+                });
+            }
+        });
+        heading.appendChild(anchor);
     });
 });

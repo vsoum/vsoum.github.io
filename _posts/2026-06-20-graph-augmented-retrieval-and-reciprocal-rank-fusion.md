@@ -5,6 +5,7 @@ description: "Three retrieval lanes—semantic embeddings, BM25 with a code-awar
 tags: [ LLM, AI, Python, Reliable by Design ]
 featured_image_thumbnail: assets/images/posts/misc/graph-retrieval_thumbnail.jpg
 featured_image: assets/images/posts/misc/graph-retrieval.jpg
+image: /assets/images/posts/misc/graph-retrieval.jpg
 featured: false
 series: "Reliable by Design"
 series_index: 3

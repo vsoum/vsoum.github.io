@@ -5,7 +5,14 @@ meta_description: "Technical blog, perfect for software engineers."
 logo: "assets/images/catnipcoderlogo.png"
 favicon: "assets/images/favicon.ico"
 baseurl:
+url: "https://www.catnipcoder.com"
 production_url: https://www.catnipcoder.com/
+social:
+  name: "Vasilis Soumakis"
+  links:
+    - "https://www.linkedin.com/in/bill-soumakis-b206a339"
+    - "https://github.com/VassilisSoum"
+    - "https://medium.com/@billsoumakis"
 disqus:
 mailchimp_url: "https://gmail.us21.list-manage.com/subscribe/post?u=f96be454ea966235860117a2d&amp;id=b699e63785&amp;f_id=00659be6f0"
 cover_image: bc_1.jpg
@@ -51,6 +58,13 @@ paginate_path: /page:num/
 
 # Permalinks
 permalink: /:title
+
+# Default social-card image (overridden per-post via the `image` front matter key)
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/images/bc_1.jpg
 
 # Other
 markdown: kramdown
