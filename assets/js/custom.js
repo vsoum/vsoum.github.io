@@ -46,3 +46,20 @@
 	});
 
 }(jQuery));
+
+// Copy-to-clipboard buttons for code blocks
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('pre > code').forEach(function (codeBlock) {
+        var button = document.createElement('button');
+        button.className = 'copy-btn';
+        button.textContent = 'Copy';
+        var pre = codeBlock.parentNode;
+        pre.appendChild(button);
+        button.addEventListener('click', function () {
+            navigator.clipboard.writeText(codeBlock.innerText).then(function () {
+                button.textContent = 'Copied!';
+                setTimeout(function () { button.textContent = 'Copy'; }, 1500);
+            });
+        });
+    });
+});

@@ -371,3 +371,30 @@
 .series-item--upcoming em {
   font-size: 0.85em;
 }
+
+/* Copy-to-clipboard button */
+pre {
+  position: relative;
+}
+
+.copy-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  font-family: $font-primary;
+  font-size: 0.61111rem;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  position: absolute;
+  right: 8px;
+  text-transform: uppercase;
+  top: 8px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.9);
+}

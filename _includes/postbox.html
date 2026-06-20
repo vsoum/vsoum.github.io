@@ -3,6 +3,7 @@
         <div class="post-meta">
             <time class="published" datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: "%B %-d, %Y"
                 }}</time>
+            &nbsp;&middot;&nbsp;{% assign words = post.content | number_of_words %}{% assign minutes = words | divided_by: 200 %}{% if minutes < 1 %}{% assign minutes = 1 %}{% endif %}{{ minutes }} min read
         </div><!-- .post-meta -->
         <h2 class="post-title">
             <a href="{{ post.url | absolute_url }}" rel="bookmark">{{ post.title }}</a>

@@ -11,6 +11,7 @@ post_class: post-template
                 <div class="post-meta">
                     <time class="post-date" datetime="{{ page.date | date: " %Y-%m-%d" }}">{{ page.date | date: "%B %-d,
                         %Y" }}</time>
+                    &nbsp;&middot;&nbsp;{% assign words = page.content | number_of_words %}{% assign minutes = words | divided_by: 200 %}{% if minutes < 1 %}{% assign minutes = 1 %}{% endif %}{{ minutes }} min read
                 </div><!-- .post-meta -->
                 <h1 class="posttitle">{{ page.title }}</h1>
             </header><!-- .post-header -->
@@ -34,7 +35,7 @@ post_class: post-template
                     <a target="_blank"
                         href="https://twitter.com/share?text={{ page.title | url_encode }}&amp;url={{ site.production_url }}{{ page.url | remove_first: '/' }}">Twitter</a>
                     <a target="_blank"
-                        href="https://www.facebook.com/sharer/sharer.php?u={{ site.production_url }}{{ page.url | remove_first: '/' }}">Facebook</a>
+                        href="https://www.linkedin.com/sharing/share-offsite/?url={{ site.production_url }}{{ page.url | remove_first: '/' }}">LinkedIn</a>
                 </div><!-- .share-post -->
             </footer>
             <div class="author-box">
